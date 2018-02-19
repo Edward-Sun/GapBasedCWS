@@ -58,7 +58,7 @@ The first one is the original char (，), the second one is the processed char (
 
 prepare_data_index.py is used produce **.csv** that is used as direct input
 
-model.py & train.py are paired model and train file
+model.py, train.py & test.py are paired model, train & test file
 
 ## Run
 
@@ -68,4 +68,9 @@ When you have all necessary files:
 
 ```bash
 python train.py
+```
+When you have necessary checkpoint files which are produced by train.py once at a time:
+
+```bash
+python test.py
 ```

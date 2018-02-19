@@ -2,18 +2,13 @@
 
 import os
 
-#Baseline config
 TASK_NAME = 'weibo'
 MAX_STEP = 40001
 TEST_WHO = [0, 1, 2, 3]
-
-#important config
 DEVICE = '0'
 MEMORY = 0.25
 BIGRAM = True
 UNIGRAM = True
-GREEDY_LOSS = True
-GREEDY = 1
 LEARNING_RATE0 = 0.002
 LEARNING_RATE1 = 0.0002
 LEARNING_RATE2 = 0.00002

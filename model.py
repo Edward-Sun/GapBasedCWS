@@ -61,33 +61,20 @@ class Model(object):
             unary_scores = tf.reshape(self.unary_scores, [-1, 2]) 
         with tf.variable_scope("Loss"):
             with tf.variable_scope("Greedy"):
-            # Greedy log Likelihood losses                
-                predictions = tf.nn.softmax(unary_scores)
-                predictions_pt = tf.where(tf.equal(tf.reshape(self.y, [-1]), 1),
-                                          tf.reshape(predictions[:,0], [-1]), 
-                                          tf.reshape(predictions[:,1], [-1]))
-                focal_weights = weights * predictions_pt * predictions_pt
+            # Greedy log Likelihood losses
                 y = tf.reshape(tf.one_hot(self.y, 2), [-1, 2])
                 
                 y = y * (1 - LABEL_SMOOTHING) + LABEL_SMOOTHING/2
                 
-                focal_loss = tf.losses.softmax_cross_entropy(onehot_labels=y, logits=unary_scores,
-                                                               weights=focal_weights) 
                 greedy_loss = tf.losses.softmax_cross_entropy(onehot_labels=y, logits=unary_scores,
                                                                 weights=weights)        
-            with tf.variable_scope("Entropy"):
-                    uniform = tf.ones(shape = tf.shape(unary_scores))
-                    confident_penalty = self.shannon_entropy(uniform, weights) - self.shannon_entropy(unary_scores, weights) 
 
             reg_loss =  tf.reduce_sum(tf.losses.get_regularization_losses())
-            if GREEDY_LOSS:
-                loss = reg_loss + GREEDY * greedy_loss
-            else:
-                loss = reg_loss + GREEDY * focal_loss
+
+            loss = reg_loss + greedy_loss
+
         with tf.variable_scope("loss") as scope:
             tf.summary.scalar('loss_greedy', greedy_loss)
-            tf.summary.scalar('loss_focal', focal_loss)
-            tf.summary.scalar('confident_penaly', confident_penalty)
             tf.summary.scalar('regularization', reg_loss)
 
         with tf.variable_scope("accuracy") as scope:
